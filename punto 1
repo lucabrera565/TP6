@@ -1,0 +1,69 @@
+#include<iostream>
+using namespace std;
+
+struct Nodo{
+    int dato;
+    Nodo* siguiente;
+    Nodo* anterior;
+};
+
+class ListaDoble{
+private:
+    Nodo* inicio;
+    Nodo* fin;
+
+public:
+    ListaDoble(){
+        inicio=nullptr;
+        fin=nullptr;
+    }
+
+    Nodo* crearNodo(int valor){
+        Nodo* nuevo=new Nodo;
+        nuevo->dato=valor;
+        nuevo->siguiente=nullptr;
+        nuevo->anterior=nullptr;
+        return nuevo;
+    }
+
+    void insertarInicio(int valor){
+        Nodo* nuevo=crearNodo(valor);
+        if(inicio==nullptr){
+            inicio=nuevo;
+            fin=nuevo;
+        }else{
+            nuevo->siguiente=inicio;
+            inicio->anterior=nuevo;
+            inicio=nuevo;
+        }
+    }
+
+    void insertarFinal(int valor){
+        Nodo* nuevo=crearNodo(valor);
+        if(inicio==nullptr){
+            inicio=nuevo;
+            fin=nuevo;
+        }else{
+            fin->siguiente=nuevo;
+            fin=nuevo;
+        }
+    }
+
+    void mostrarLista(){
+        Nodo* actual=inicio;
+        while(actual!=nullptr){
+            cout<<actual->dato<<" <-> ";
+            actual=actual->siguiente;
+        }
+        cout<<"NULL"<<endl;
+    }
+};
+
+int main(){
+    ListaDoble lista;
+    lista.insertarInicio(3);
+    lista.insertarFinal(7);
+    lista.insertarInicio(1);
+
+    lista.mostrarLista();
+} 
