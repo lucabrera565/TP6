@@ -1,0 +1,156 @@
+#include<iostream>
+using namespace std;
+
+// estructura de nodo doble
+struct Nodo{
+    int dato;
+    Nodo* siguiente;
+    Nodo* anterior;
+};
+
+class ListaDoble{
+private:
+    Nodo* inicio;
+    Nodo* fin;
+
+public:
+    ListaDoble(){
+        inicio=nullptr;
+        fin=nullptr;
+    }
+
+    Nodo* crearNodo(int valor){
+        Nodo* nuevo=new Nodo;
+        nuevo->dato=valor;
+        nuevo->siguiente=nullptr;
+        nuevo->anterior=nullptr;
+        return nuevo;
+    }
+
+    void insertarInicio(int valor){
+        Nodo* nuevo=crearNodo(valor);
+        if(inicio==nullptr){
+            inicio=nuevo;
+            fin=nuevo;
+        }else{
+            nuevo->siguiente=inicio;
+            inicio->anterior=nuevo;
+            inicio=nuevo;
+        }
+    }
+
+    void insertarFinal(int valor){
+        Nodo* nuevo=crearNodo(valor);
+        if(inicio==nullptr){
+            inicio=nuevo;
+            fin=nuevo;
+        }else{
+            fin->siguiente=nuevo;
+            nuevo->anterior=fin;
+            fin=nuevo;
+        }
+    }
+
+    void insertarOrdenado(int valor){
+        Nodo* nuevo=crearNodo(valor);
+        if(inicio==nullptr||valor<inicio->dato){
+            insertarInicio(valor);
+        }else if(valor>=fin->dato){
+            insertarFinal(valor);
+        }else{
+            Nodo* actual=inicio;
+            while(actual!=nullptr&&actual->dato<valor){
+                actual=actual->siguiente;
+            }
+            nuevo->siguiente=actual;
+            nuevo->anterior=actual->anterior;
+            actual->anterior->siguiente=nuevo;
+            actual->anterior=nuevo;
+        }
+    }
+
+    void eliminarInicio(){
+        if(inicio!=nullptr){
+            Nodo* borrado=inicio;
+            if(inicio==fin){
+                inicio=nullptr;
+                fin=nullptr;
+            }else{
+                inicio=inicio->siguiente;
+                inicio->anterior=nullptr;
+            }
+            delete borrado;
+        }
+    }
+
+    void eliminarFinal(){
+        if(fin!=nullptr){
+            Nodo* borrado=fin;
+            if(inicio==fin){
+                inicio=nullptr;
+                fin=nullptr;
+            }else{
+                fin=fin->anterior;
+                fin->siguiente=nullptr;
+            }
+            delete borrado;
+        }
+    }
+
+    void eliminarValor(int valor){
+        Nodo* actual=inicio;
+        while(actual!=nullptr&&actual->dato!=valor){
+            actual=actual->siguiente;
+        }
+        if(actual!=nullptr){
+            if(actual==inicio){
+                eliminarInicio();
+            }else if(actual==fin){
+                eliminarFinal();
+            }else{
+                actual->anterior->siguiente=actual->siguiente;
+                actual->siguiente->anterior=actual->anterior;
+                delete actual;
+            }
+        }
+    }
+
+    bool buscar(int valor){
+        Nodo* actual=inicio;
+        while(actual!=nullptr){
+            if(actual->dato==valor){
+                return true;
+            }
+            actual=actual->siguiente;
+        }
+        return false;
+    }
+
+    void mostrarLista(){
+        Nodo* actual=inicio;
+        while(actual!=nullptr){
+            cout<<actual->dato<<" <-> ";
+            actual=actual->siguiente;
+        }
+        cout<<"NULL"<<endl;
+    }
+};
+
+int main(){
+    ListaDoble lista;
+    lista.insertarOrdenado(5);
+    lista.insertarOrdenado(2);
+    lista.insertarOrdenado(8);
+    lista.insertarOrdenado(4);
+
+    lista.mostrarLista();
+
+    lista.eliminarInicio();
+    lista.eliminarFinal();
+    lista.eliminarValor(4);
+
+    cout<<"Buscar 5: ";
+    cout<<(lista.buscar(5)?"Encontrado":"No encontrado")<<endl;
+
+    lista.mostrarLista();
+}
