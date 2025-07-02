@@ -1,0 +1,81 @@
+#include<iostream>
+using namespace std;
+
+typedef struct tnodo* pnodo;
+typedef struct tnodo{
+    int dato;
+    pnodo sig;
+    pnodo ant;
+};
+
+typedef struct tlista{
+    pnodo inicio;
+    pnodo fin;
+};
+
+void IniciarLista(tlista &lista){
+    lista.inicio = NULL;
+    lista.fin = NULL;
+}
+
+void CrearNodo(pnodo &nuevo, int valor){
+    nuevo = new tnodo;
+    if(nuevo != NULL){
+        nuevo->dato = valor;
+        nuevo->sig = NULL;
+        nuevo->ant = NULL;
+    }
+}
+
+void AgregarFinal(tlista &lista, pnodo nuevo){
+    if(lista.inicio == NULL){
+        lista.inicio = nuevo;
+        lista.fin = nuevo;
+    }
+    else{
+        lista.fin->sig = nuevo;
+        nuevo->ant = lista.fin;
+        lista.fin = nuevo;
+    }
+}
+
+void MostrarBinarioDesdeFin(tlista lista){
+    pnodo aux = lista.fin;
+    while(aux != NULL){
+        cout << aux->dato;
+        aux = aux->ant;
+    }
+    cout << endl;
+}
+
+void DecimalABinario(int numero){
+    tlista binario;
+    IniciarLista(binario);
+
+    if(numero == 0){
+        pnodo cero;
+        CrearNodo(cero, 0);
+        AgregarFinal(binario, cero);
+    }else{
+        while(numero > 0){
+            int resto = numero % 2;
+            pnodo nuevo;
+            CrearNodo(nuevo, resto);
+            AgregarFinal(binario, nuevo);
+            numero = numero / 2;
+        }
+    }
+
+    MostrarBinarioDesdeFin(binario);
+}
+
+int main(){
+    int numero;
+    cout << "Ingrese un numero decimal: ";
+    cin >> numero;
+
+    cout << "Binario: ";
+    DecimalABinario(numero);
+
+    return 0;
+}
